@@ -14,6 +14,11 @@ PGPASSWORD=password
 PGDATABASE=newsdb
 PORT=3000
 JWT_SECRET=your_secret_key
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=username
+SMTP_PASS=password
+EMAIL_FROM=no-reply@example.com
 ```
 
 Pastikan PostgreSQL berjalan dan database sesuai variabel `PGDATABASE` telah dibuat.
@@ -81,6 +86,7 @@ CREATE TABLE users (
   email TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
   polres_id INTEGER REFERENCES polres(id),
+  is_verified BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
@@ -103,5 +109,10 @@ Selain judul dan tautan, scraper juga mencoba mengambil tanggal publikasi, ringk
 - `POST /tags` – tambah tag baru (`name`)
 - `POST /auth/register` – registrasi user baru (`email`, `password`, `polres_id`)
 - `POST /auth/login` – login dan mendapatkan token
+- `GET /auth/verify/:token` – verifikasi email pengguna
 
 Frontend dapat menggunakan API ini sebagai dasar pengelolaan data pemberitaan.
+
+## Verifikasi Email
+
+Saat registrasi, backend akan mengirim email berisi tautan verifikasi ke alamat yang didaftarkan. Pengguna harus membuka tautan tersebut agar akun aktif dan dapat melakukan proses login.

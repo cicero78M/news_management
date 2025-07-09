@@ -12,5 +12,5 @@ INSERT INTO tags (name) VALUES
 ('Internal'),
 ('PressRelease');
 
-INSERT INTO users (email, password, polres_id) VALUES
-('admin@surabaya.polri', '$2b$10$wmqAzDR3bkXFt8tNMarEqOQgWtD4qkZt1krN5lRaH9WJORc4w2udy', 1);
+INSERT INTO users (email, password, polres_id, is_verified) VALUES
+('admin@surabaya.polri', '$2b$10$wmqAzDR3bkXFt8tNMarEqOQgWtD4qkZt1krN5lRaH9WJORc4w2udy', 1, TRUE);
