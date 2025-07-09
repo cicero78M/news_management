@@ -8,7 +8,10 @@ const defaultSelectors = {
   article: 'article',
   title: 'h1,h2',
   link: 'a',
-  content: 'p'
+  content: 'p',
+  date: 'time',
+  snippet: 'p',
+  thumbnail: 'img'
 };
 
 function extractArticles($, selectors = defaultSelectors, baseUrl) {
@@ -19,7 +22,11 @@ function extractArticles($, selectors = defaultSelectors, baseUrl) {
     if (!title || !link) return;
     const absoluteLink = link.startsWith('http') ? link : new URL(link, baseUrl).href;
     const content = $(el).find(selectors.content).text().trim();
-    articles.push({ title, link: absoluteLink, content });
+    const snippet = $(el).find(selectors.snippet).first().text().trim();
+    const dateText = $(el).find(selectors.date).first().attr('datetime') || $(el).find(selectors.date).first().text();
+    const image = $(el).find(selectors.thumbnail).first().attr('src');
+    const published_at = dateText ? new Date(dateText) : new Date();
+    articles.push({ title, link: absoluteLink, content, summary: snippet, image_url: image, published_at });
   });
   return articles;
 }
@@ -32,10 +39,13 @@ async function scrape(polres) {
     for (const art of articles) {
       await articleModel.create({
         ...art,
-        published_at: new Date(),
         polres_id: polres.id,
         category_id: null,
-        author: null
+        author: null,
+        source: polres.name,
+        comment_count: null,
+        share_count: null,
+        view_count: null
       });
     }
   } catch (err) {
