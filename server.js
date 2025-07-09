@@ -2,6 +2,8 @@ const express = require('express');
 const cron = require('node-cron');
 const polresRoutes = require('./src/routes/polres');
 const articlesRoutes = require('./src/routes/articles');
+const categoriesRoutes = require('./src/routes/categories');
+const tagsRoutes = require('./src/routes/tags');
 const scraper = require('./src/scraper/scraper');
 require('dotenv').config();
 
@@ -10,6 +12,8 @@ app.use(express.json());
 
 app.use('/polres', polresRoutes);
 app.use('/polres/:polresId/articles', articlesRoutes);
+app.use('/categories', categoriesRoutes);
+app.use('/tags', tagsRoutes);
 
 // schedule scraping every hour
 cron.schedule('0 * * * *', async () => {
