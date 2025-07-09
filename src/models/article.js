@@ -1,11 +1,46 @@
 const db = require('../db');
 
 async function create(data) {
-  const { title, link, content, published_at, polres_id } = data;
+  const {
+    title,
+    link,
+    content,
+    summary,
+    published_at,
+    source,
+    category,
+    tags,
+    image_url,
+    author,
+    comments,
+    shares,
+    views,
+    polres_id
+  } = data;
   const { rows } = await db.query(
-    `INSERT INTO articles (title, link, content, published_at, polres_id)
-     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-    [title, link, content, published_at, polres_id]
+    `INSERT INTO articles (
+      title, link, content, summary, published_at, source,
+      category, tags, image_url, author, comments, shares, views, polres_id
+     ) VALUES (
+      $1, $2, $3, $4, $5, $6,
+      $7, $8, $9, $10, $11, $12, $13, $14
+     ) RETURNING *`,
+    [
+      title,
+      link,
+      content,
+      summary,
+      published_at,
+      source,
+      category,
+      tags,
+      image_url,
+      author,
+      comments,
+      shares,
+      views,
+      polres_id
+    ]
   );
   return rows[0];
 }

@@ -11,6 +11,27 @@ const defaultSelectors = {
   content: 'p'
 };
 
+async function fetchArticleDetails(url) {
+  try {
+    const res = await axios.get(url);
+    const $ = cheerio.load(res.data);
+    const summary =
+      $('meta[name="description"]').attr('content') ||
+      $('p').first().text().trim();
+    const published_at =
+      $('meta[property="article:published_time"]').attr('content') ||
+      null;
+    const category = $('meta[property="article:section"]').attr('content') || null;
+    const tags = $('meta[property="article:tag"]').map((i, el) => $(el).attr('content')).get();
+    const image_url = $('meta[property="og:image"]').attr('content') || null;
+    const author = $('meta[name="author"]').attr('content') || null;
+    return { summary, published_at, category, tags, image_url, author };
+  } catch (err) {
+    console.error(`failed to fetch details for ${url}`, err.message);
+    return {};
+  }
+}
+
 function extractArticles($, selectors = defaultSelectors, baseUrl) {
   const articles = [];
   $(selectors.article).each((i, el) => {
@@ -30,9 +51,12 @@ async function scrape(polres) {
     const $ = cheerio.load(res.data);
     const articles = extractArticles($, defaultSelectors, polres.website);
     for (const art of articles) {
+      const details = await fetchArticleDetails(art.link);
       await articleModel.create({
         ...art,
-        published_at: new Date(),
+        ...details,
+        published_at: details.published_at ? new Date(details.published_at) : new Date(),
+        source: new URL(art.link).hostname,
         polres_id: polres.id
       });
     }
