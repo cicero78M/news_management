@@ -1,5 +1,6 @@
 const express = require('express');
 const categoryModel = require('../models/category');
+const auth = require('../authMiddleware');
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const { name } = req.body;
   try {
     const category = await categoryModel.create(name);

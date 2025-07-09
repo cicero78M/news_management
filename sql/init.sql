@@ -38,3 +38,11 @@ CREATE TABLE IF NOT EXISTS article_tags (
   tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
   PRIMARY KEY (article_id, tag_id)
 );
+
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  polres_id INTEGER REFERENCES polres(id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

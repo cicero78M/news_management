@@ -1,5 +1,6 @@
 const express = require('express');
 const polresModel = require('../models/polres');
+const auth = require('../authMiddleware');
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const { name, website } = req.body;
   try {
     const polres = await polresModel.create(name, website);

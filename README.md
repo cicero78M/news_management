@@ -13,6 +13,7 @@ PGUSER=postgres
 PGPASSWORD=password
 PGDATABASE=newsdb
 PORT=3000
+JWT_SECRET=your_secret_key
 ```
 
 Pastikan PostgreSQL berjalan dan database sesuai variabel `PGDATABASE` telah dibuat.
@@ -74,6 +75,14 @@ CREATE TABLE article_tags (
   tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
   PRIMARY KEY (article_id, tag_id)
 );
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  polres_id INTEGER REFERENCES polres(id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
 Tambahkan data Polres awal dengan API `POST /polres` atau langsung pada database.
@@ -92,5 +101,7 @@ Selain judul dan tautan, scraper juga mencoba mengambil tanggal publikasi, ringk
 - `POST /categories` – tambah kategori baru (`name`)
 - `GET /tags` – daftar tag
 - `POST /tags` – tambah tag baru (`name`)
+- `POST /auth/register` – registrasi user baru (`email`, `password`, `polres_id`)
+- `POST /auth/login` – login dan mendapatkan token
 
 Frontend dapat menggunakan API ini sebagai dasar pengelolaan data pemberitaan.
