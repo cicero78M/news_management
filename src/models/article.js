@@ -1,11 +1,19 @@
 const db = require('../db');
 
 async function create(data) {
-  const { title, link, content, published_at, polres_id } = data;
+  const {
+    title,
+    link,
+    content,
+    published_at,
+    polres_id,
+    category_id,
+    author,
+  } = data;
   const { rows } = await db.query(
-    `INSERT INTO articles (title, link, content, published_at, polres_id)
-     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-    [title, link, content, published_at, polres_id]
+    `INSERT INTO articles (title, link, content, published_at, polres_id, category_id, author)
+     VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+    [title, link, content, published_at, polres_id, category_id, author]
   );
   return rows[0];
 }

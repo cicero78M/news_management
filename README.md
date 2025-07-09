@@ -40,13 +40,33 @@ CREATE TABLE polres (
   website TEXT NOT NULL
 );
 
+CREATE TABLE categories (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE tags (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE
+);
+
 CREATE TABLE articles (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   link TEXT NOT NULL,
   content TEXT,
   published_at TIMESTAMP,
-  polres_id INTEGER REFERENCES polres(id)
+  polres_id INTEGER REFERENCES polres(id),
+  category_id INTEGER REFERENCES categories(id),
+  author TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE article_tags (
+  article_id INTEGER REFERENCES articles(id) ON DELETE CASCADE,
+  tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
+  PRIMARY KEY (article_id, tag_id)
 );
 ```
 
@@ -61,5 +81,9 @@ Modul `src/scraper/scraper.js` memuat mekanisme scraping menggunakan `axios` dan
 - `GET /polres` – daftar Polres
 - `POST /polres` – tambah Polres baru (`name`, `website`)
 - `GET /polres/:polresId/articles` – daftar artikel milik Polres
+- `GET /categories` – daftar kategori
+- `POST /categories` – tambah kategori baru (`name`)
+- `GET /tags` – daftar tag
+- `POST /tags` – tambah tag baru (`name`)
 
 Frontend dapat menggunakan API ini sebagai dasar pengelolaan data pemberitaan.

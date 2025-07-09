@@ -33,7 +33,9 @@ async function scrape(polres) {
       await articleModel.create({
         ...art,
         published_at: new Date(),
-        polres_id: polres.id
+        polres_id: polres.id,
+        category_id: null,
+        author: null
       });
     }
   } catch (err) {

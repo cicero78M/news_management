@@ -4,11 +4,31 @@ CREATE TABLE IF NOT EXISTS polres (
   website TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS categories (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS tags (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE
+);
+
 CREATE TABLE IF NOT EXISTS articles (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   link TEXT NOT NULL,
   content TEXT,
   published_at TIMESTAMP,
-  polres_id INTEGER REFERENCES polres(id)
+  polres_id INTEGER REFERENCES polres(id),
+  category_id INTEGER REFERENCES categories(id),
+  author TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS article_tags (
+  article_id INTEGER REFERENCES articles(id) ON DELETE CASCADE,
+  tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
+  PRIMARY KEY (article_id, tag_id)
 );
