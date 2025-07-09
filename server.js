@@ -4,12 +4,14 @@ const polresRoutes = require('./src/routes/polres');
 const articlesRoutes = require('./src/routes/articles');
 const categoriesRoutes = require('./src/routes/categories');
 const tagsRoutes = require('./src/routes/tags');
+const authRoutes = require('./src/routes/auth');
 const scraper = require('./src/scraper/scraper');
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 
+app.use('/auth', authRoutes);
 app.use('/polres', polresRoutes);
 app.use('/polres/:polresId/articles', articlesRoutes);
 app.use('/categories', categoriesRoutes);
