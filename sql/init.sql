@@ -19,10 +19,16 @@ CREATE TABLE IF NOT EXISTS articles (
   title TEXT NOT NULL,
   link TEXT NOT NULL,
   content TEXT,
+  summary TEXT,
+  image_url TEXT,
   published_at TIMESTAMP,
   polres_id INTEGER REFERENCES polres(id),
   category_id INTEGER REFERENCES categories(id),
   author TEXT,
+  source TEXT,
+  comment_count INTEGER,
+  share_count INTEGER,
+  view_count INTEGER,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
