@@ -1,5 +1,6 @@
 const express = require('express');
 const tagModel = require('../models/tag');
+const auth = require('../authMiddleware');
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const { name } = req.body;
   try {
     const tag = await tagModel.create(name);
